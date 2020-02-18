@@ -20,7 +20,7 @@ use SitemapPlugin\Factory\AlternativeUrlFactoryInterface;
 use SitemapPlugin\Factory\SitemapUrlFactoryInterface;
 use SitemapPlugin\Factory\UrlFactoryInterface;
 use SitemapPlugin\Model\ChangeFrequency;
-use SitemapPlugin\Model\SitemapUrlInterface;
+use SitemapPlugin\Model\UrlInterface;
 use SitemapPlugin\Provider\UrlProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -37,8 +37,8 @@ final class SectionUrlProvider implements UrlProviderInterface
     /** @var RouterInterface */
     private $router;
 
-    /** @var SitemapUrlFactoryInterface */
-    private $sitemapUrlFactory;
+    /** @var UrlFactoryInterface */
+    private $urlFactory;
 
     /** @var LocaleContextInterface */
     private $localeContext;
@@ -49,13 +49,13 @@ final class SectionUrlProvider implements UrlProviderInterface
     public function __construct(
         SectionRepositoryInterface $sectionRepository,
         RouterInterface $router,
-        UrlFactoryInterface $sitemapUrlFactory,
+        UrlFactoryInterface $urlFactory,
         LocaleContextInterface $localeContext,
         ChannelContextInterface $channelContext
     ) {
         $this->sectionRepository = $sectionRepository;
         $this->router = $router;
-        $this->sitemapUrlFactory = $sitemapUrlFactory;
+        $this->urlFactory = $urlFactory;
         $this->localeContext = $localeContext;
         $this->channelContext = $channelContext;
     }
@@ -103,9 +103,9 @@ final class SectionUrlProvider implements UrlProviderInterface
         })->toArray();
     }
 
-    private function createSectionUrl(SectionInterface $section): SitemapUrlInterface
+    private function createSectionUrl(SectionInterface $section): UrlInterface
     {
-        $url = $this->sitemapUrlFactory->createNew();
+        $url = $this->urlFactory->createNew('');
 
         $url->setChangeFrequency(ChangeFrequency::daily());
         $url->setPriority(0.7);
@@ -122,7 +122,7 @@ final class SectionUrlProvider implements UrlProviderInterface
             ]);
 
             if ($translation->getLocale() === $this->localeContext->getLocaleCode()) {
-                $url->setLocalization($location);
+                $url->setLocation($location);
 
                 continue;
             }
