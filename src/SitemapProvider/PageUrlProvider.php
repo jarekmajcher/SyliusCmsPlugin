@@ -16,7 +16,9 @@ use BitBag\SyliusCmsPlugin\Entity\PageInterface;
 use BitBag\SyliusCmsPlugin\Entity\PageTranslationInterface;
 use BitBag\SyliusCmsPlugin\Repository\PageRepositoryInterface;
 use Doctrine\Common\Collections\Collection;
+use SitemapPlugin\Factory\AlternativeUrlFactoryInterface;
 use SitemapPlugin\Factory\SitemapUrlFactoryInterface;
+use SitemapPlugin\Factory\UrlFactoryInterface;
 use SitemapPlugin\Model\ChangeFrequency;
 use SitemapPlugin\Model\SitemapUrlInterface;
 use SitemapPlugin\Provider\UrlProviderInterface;
@@ -47,7 +49,7 @@ final class PageUrlProvider implements UrlProviderInterface
     public function __construct(
         PageRepositoryInterface $pageRepository,
         RouterInterface $router,
-        SitemapUrlFactoryInterface $sitemapUrlFactory,
+        UrlFactoryInterface $sitemapUrlFactory,
         LocaleContextInterface $localeContext,
         ChannelContextInterface $channelContext
     ) {
@@ -63,7 +65,7 @@ final class PageUrlProvider implements UrlProviderInterface
         return 'cms_pages';
     }
 
-    public function generate(): iterable
+    public function generate(ChannelInterface $channel): iterable
     {
         $urls = [];
 
