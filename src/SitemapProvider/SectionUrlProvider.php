@@ -16,7 +16,9 @@ use BitBag\SyliusCmsPlugin\Entity\SectionInterface;
 use BitBag\SyliusCmsPlugin\Entity\SectionTranslationInterface;
 use BitBag\SyliusCmsPlugin\Repository\SectionRepositoryInterface;
 use Doctrine\Common\Collections\Collection;
+use SitemapPlugin\Factory\AlternativeUrlFactoryInterface;
 use SitemapPlugin\Factory\SitemapUrlFactoryInterface;
+use SitemapPlugin\Factory\UrlFactoryInterface;
 use SitemapPlugin\Model\ChangeFrequency;
 use SitemapPlugin\Model\SitemapUrlInterface;
 use SitemapPlugin\Provider\UrlProviderInterface;
@@ -47,7 +49,7 @@ final class SectionUrlProvider implements UrlProviderInterface
     public function __construct(
         SectionRepositoryInterface $sectionRepository,
         RouterInterface $router,
-        SitemapUrlFactoryInterface $sitemapUrlFactory,
+        UrlFactoryInterface $sitemapUrlFactory,
         LocaleContextInterface $localeContext,
         ChannelContextInterface $channelContext
     ) {
@@ -63,7 +65,7 @@ final class SectionUrlProvider implements UrlProviderInterface
         return 'cms_sections';
     }
 
-    public function generate(): iterable
+    public function generate(ChannelInterface $channel): iterable
     {
         $urls = [];
 
