@@ -20,7 +20,7 @@ use SitemapPlugin\Factory\AlternativeUrlFactoryInterface;
 use SitemapPlugin\Factory\SitemapUrlFactoryInterface;
 use SitemapPlugin\Factory\UrlFactoryInterface;
 use SitemapPlugin\Model\ChangeFrequency;
-use SitemapPlugin\Model\SitemapUrlInterface;
+use SitemapPlugin\Model\UrlInterface;
 use SitemapPlugin\Provider\UrlProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -37,8 +37,8 @@ final class PageUrlProvider implements UrlProviderInterface
     /** @var RouterInterface */
     private $router;
 
-    /** @var SitemapUrlFactoryInterface */
-    private $sitemapUrlFactory;
+    /** @var UrlFactoryInterface */
+    private $urlFactory;
 
     /** @var LocaleContextInterface */
     private $localeContext;
@@ -49,13 +49,13 @@ final class PageUrlProvider implements UrlProviderInterface
     public function __construct(
         PageRepositoryInterface $pageRepository,
         RouterInterface $router,
-        UrlFactoryInterface $sitemapUrlFactory,
+        UrlFactoryInterface $urlFactory,
         LocaleContextInterface $localeContext,
         ChannelContextInterface $channelContext
     ) {
         $this->pageRepository = $pageRepository;
         $this->router = $router;
-        $this->sitemapUrlFactory = $sitemapUrlFactory;
+        $this->urlFactory = $urlFactory;
         $this->localeContext = $localeContext;
         $this->channelContext = $channelContext;
     }
@@ -103,9 +103,9 @@ final class PageUrlProvider implements UrlProviderInterface
         })->toArray();
     }
 
-    private function createPageUrl(PageInterface $page): SitemapUrlInterface
+    private function createPageUrl(PageInterface $page): UrlInterface
     {
-        $pageUrl = $this->sitemapUrlFactory->createNew();
+        $pageUrl = $this->urlFactory->createNew('');
 
         $pageUrl->setChangeFrequency(ChangeFrequency::daily());
         $pageUrl->setPriority(0.7);
@@ -128,7 +128,7 @@ final class PageUrlProvider implements UrlProviderInterface
             ]);
 
             if ($translation->getLocale() === $this->localeContext->getLocaleCode()) {
-                $pageUrl->setLocalization($location);
+                $pageUrl->setLocation($location);
 
                 continue;
             }
